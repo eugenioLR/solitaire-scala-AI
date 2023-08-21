@@ -1,4 +1,5 @@
-@main def hello: Unit =
+@main def hello: Unit = {
+  /*
   val card1 = Card(1, 1, false)
   val card2 = Card(1, 12, false)
   println(card1)
@@ -6,3 +7,8 @@
   println(Card.randomCard)
   println(Deck.completeDeck.revealTop)
   println(Deck.completeDeck.shuffle.revealTop)
+
+  println(GameState.init)
+  */
+  Game.play()
+}

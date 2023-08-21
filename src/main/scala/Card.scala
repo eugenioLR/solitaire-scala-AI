@@ -1,26 +1,29 @@
 import scala.util.Random
 
-class Card(val suit: Int = 0, val number: Int = 1, hidden : Boolean = true){
-  def copy(suit : Int = this.suit, number : Int = this.number, hidden : Boolean = this.hidden) : Card = {
+class Card(val suit: Int = 0, val number: Int = 1, val hidden : Boolean = true){
+  def copy(suit : Int = suit, number : Int = number, hidden : Boolean = hidden) : Card = {
     new Card(suit, number, hidden)
-  } 
+  }
 
-  def hide: Card = new Card(this.suit, this.number, true)
-  
-  def reveal: Card = new Card(this.suit, this.number, false)
+  def isHidden: Boolean = hidden
 
-  override def toString: String ={
-    if(this.hidden){
+  def hide: Card = new Card(suit, number, true)
+
+  def reveal: Card = new Card(suit, number, false)
+
+  override def toString: String = {
+    if(hidden) then
       "[???]"
-    }else{
-      val suit_symbol = suit match {
+    else{
+      val suitSymbol = suit match {
         case 1 => "♠"
         case 2 => "♡"
         case 3 => "♣"
         case 4 => "♢"
         case _ => "?"
       }
-      val number_str = number match {
+      
+      val numberStr = number match {
         case 1  => "A"
         case 11 => "J"
         case 12 => "Q"
@@ -29,13 +32,14 @@ class Card(val suit: Int = 0, val number: Int = 1, hidden : Boolean = true){
       }
 
       val pad = if(number != 10) " " else ""
-      s"[$pad$number_str$suit_symbol]"
+      s"[$pad$numberStr$suitSymbol]"
     }
   }
 }
 
 object Card {
-  def randomCard: Card = 
+  def randomCard: Card = {
     val rand = new Random
     new Card(Math.floorMod(rand.nextInt, 4)+1, Math.floorMod(rand.nextInt, 13)+1, false)
+  }
 }
