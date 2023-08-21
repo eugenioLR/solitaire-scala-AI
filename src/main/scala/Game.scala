@@ -1,6 +1,9 @@
 import scala.util.matching.Regex
 import scala.io.StdIn.readLine
 
+enum Action:
+  case Rotate, DrawTable, DrawFinal, TableTable, TableFinal
+
 object Game {
   def showInfo() : Unit = {
     println("r                : rotate")
@@ -46,20 +49,25 @@ object Game {
 
   def doActionStr(state: GameState, inputStr: String): GameState = {
     val orderPattern = new Regex("^(r|exit|dt|df|tt|tf)")
-
-    if (orderPattern findFirstIn inputStr) != None then {
-      val str = orderPattern findFirstIn inputStr
-      val args = inputPileN(inputStr)
-      str.get match {
-        case "r" => state.rotate
-        case "dt" => state.drawToTable(args(0))
-        case "df" => state.drawToFinal(args(0))
-        case "tt" => state.tableToTable(args(0), args(1), args(2))
-        case "tf" => state.tableToFinal(args(0), args(1))
-        case _ => state
-      }
-    } else {
-      state
+    val str = orderPattern findFirstIn inputStr
+    val args = inputPileN(inputStr)
+    val action = str.get match {
+      case "r"  => Action.Rotate
+      case "dt" => Action.DrawTable
+      case "df" => Action.DrawFinal
+      case "tt" => Action.TableTable
+      case "tf" => Action.TableFinal
+    }
+    doAction(state, action, args)
+  }
+  
+  def doAction(state: GameState, action: Action, args: List[Int]): GameState = {
+    action match {
+      case Action.Rotate     => state.rotate
+      case Action.DrawTable  => state.drawToTable(args(0))
+      case Action.DrawFinal  => state.drawToFinal(args(0))
+      case Action.TableTable => state.tableToTable(args(0), args(1), args(2))
+      case Action.TableFinal => state.tableToFinal(args(0), args(1))
     }
   }
 
